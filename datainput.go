@@ -17,7 +17,7 @@ import (
 	"os"
 	"strconv"
 
-	"github.com/btcsuite/btcec"
+	"github.com/btcsuite/btcd/btcec"
 )
 
 // readLength is the length of a hash compression read in bytes.
@@ -64,7 +64,7 @@ func ReadKeyRing(filename string, kp *ecdsa.PrivateKey) (*PublicKeyRing, error) 
 
 	err = json.Unmarshal(f, &keyMap)
 	if err != nil {
-		str := fmt.Sprintf("json error: Couldn't unmarshall keyring file.", err)
+		str := fmt.Sprintf("json error: Couldn't unmarshall keyring file: %v", err)
 		jsonError := errors.New(str)
 		return nil, jsonError
 	}
