@@ -6,6 +6,7 @@
 package main
 
 import (
+	"C"
 	"crypto/ecdsa"
 	crand "crypto/rand"
 	"encoding/hex"
@@ -17,6 +18,7 @@ import (
 )
 
 // generateKeyPair generates and stores an ECDSA keypair to a file.
+//export generateKeyPair
 func generateKeyPair() map[string]string {
 	// Generate keypairs.
 	aKeypair, _ := ecdsa.GenerateKey(btcec.S256(), crand.Reader)
@@ -35,6 +37,7 @@ func generateKeyPair() map[string]string {
 	return keypairMap
 }
 
+//export sign
 func sign(keyPair map[string]string, keyRing map[string]string, message string) string {
 	kp, err := ParseKeyPair(keyPair)
 	if err != nil {
@@ -52,6 +55,7 @@ func sign(keyPair map[string]string, keyRing map[string]string, message string) 
 	}
 }
 
+//export verify
 func verify(keyRing map[string]string, message string, signature string) bool {
 	kr, err := ParseKeyRing(keyRing, nil)
 	if err != nil {
