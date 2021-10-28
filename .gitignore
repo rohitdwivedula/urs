@@ -2,3 +2,4 @@ results/
 *.o
 *.out
 *.so
+cpp/urs.h

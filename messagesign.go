@@ -1,25 +1,25 @@
-// Copyright 2014 The Monero Developers.
-// All rights reserved.
-// Use of this source code is governed by the MIT
-// license that can be found in the LICENSE file.
-
 package main
 
+/*
+#include <stdlib.h>
+*/
+import "C"
+
 import (
-	"C"
 	"crypto/ecdsa"
 	crand "crypto/rand"
 	"encoding/hex"
 	"fmt"
+	"strconv"
 	"strings"
+	"unsafe"
 
 	"github.com/btcsuite/btcd/btcec"
 	"github.com/btcsuite/btcd/chaincfg"
 	"github.com/btcsuite/btcutil"
 )
-import "strconv"
 
-// generateKeyPair generates and stores an ECDSA keypair to a file.
+// generates and return an ECDSA keypair.
 //export generateKeyPair
 func generateKeyPair() map[string]string {
 	// Generate keypairs.
@@ -39,8 +39,14 @@ func generateKeyPair() map[string]string {
 	return keypairMap
 }
 
+//export freeString
+func freeString(x *C.char) {
+	C.free(unsafe.Pointer(x))
+}
+
+// sign a message with your keyPair with a keyRing of public keys.
 //export sign
-func sign(keyPair_t string, keyRing_t string, message string) string {
+func sign(keyPair_t string, keyRing_t string, message string) *C.char {
 	keyPair := make(map[string]string)
 	keyRing := make(map[string]string)
 
@@ -55,22 +61,23 @@ func sign(keyPair_t string, keyRing_t string, message string) string {
 		keyRing[strconv.Itoa(i)] = split2[i]
 	}
 
-	fmt.Printf("[SIGN] Keypair: %v\n\n", keyPair)
-	fmt.Printf("[SIGN] Keyring: %v\n\n", keyRing)
-
 	kp, err := ParseKeyPair(keyPair)
 	if err != nil {
-		return ""
+		return C.CString("")
 	}
 	kr, err := ParseKeyRing(keyRing, kp)
 	if err != nil {
-		return ""
+		return C.CString("")
 	}
 	ringsig, err := Sign(crand.Reader, kp, kr, []byte(message))
+	if err != nil {
+		return C.CString("")
+	}
 	if Verify(kr, []byte(message), ringsig) {
-		return ringsig.ToBase58()
+		fmt.Printf("%v", ringsig.ToBase58())
+		return C.CString(ringsig.ToBase58())
 	} else {
-		return ""
+		return C.CString("")
 	}
 }
 
