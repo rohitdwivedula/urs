@@ -11,10 +11,7 @@ is flexible. Increasing this number slows down signing and
 verifying linearly, and also increases the size of the 
 signatures linearly.
 
-Bitcoin public and private keys are used to generate the 
-signatures. You may generate your own keypairs with the 
-set-generate function described below. Bitcoin addresses 
-are also generated.
+Deleted.
 
 When in default (unique) mode, signatures are generated 
 with the prefix '1' and contain immutable Hx, Hy values 
