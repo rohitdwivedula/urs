@@ -417,7 +417,7 @@ func hashAllqc(c elliptic.Curve, mR []byte, ax, ay, bx, by []*big.Int) (hash *bi
 func Sign(rand io.Reader,
 	priv *ecdsa.PrivateKey,
 	R *PublicKeyRing,
-	m []byte) (rs *RingSign, err error) {
+	m []byte, v []byte) (rs *RingSign, err error) {
 
 	sort.Sort(R)
 
@@ -490,7 +490,7 @@ func Sign(rand io.Reader,
 
 // Verify verifies the signature in rs of m using the public key ring, R. Its
 // return value records whether the signature is valid.
-func Verify(R *PublicKeyRing, m []byte, rs *RingSign) bool {
+func Verify(R *PublicKeyRing, m []byte, v []byte, rs *RingSign) bool {
 	sort.Sort(R)
 
 	s := R.Len()

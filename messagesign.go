@@ -46,7 +46,7 @@ func freeString(x *C.char) {
 
 // sign a message with your keyPair with a keyRing of public keys.
 //export sign
-func sign(keyPair_t string, keyRing_t string, message string) *C.char {
+func sign(keyPair_t string, keyRing_t string, m string, v string) *C.char {
 	keyPair := make(map[string]string)
 	keyRing := make(map[string]string)
 
@@ -69,11 +69,11 @@ func sign(keyPair_t string, keyRing_t string, message string) *C.char {
 	if err != nil {
 		return C.CString("")
 	}
-	ringsig, err := Sign(crand.Reader, kp, kr, []byte(message))
+	ringsig, err := Sign(crand.Reader, kp, kr, []byte(m), []byte(v))
 	if err != nil {
 		return C.CString("")
 	}
-	if Verify(kr, []byte(message), ringsig) {
+	if Verify(kr, []byte(m), []byte(v), ringsig) {
 		fmt.Printf("%v", ringsig.ToBase58())
 		return C.CString(ringsig.ToBase58())
 	} else {
@@ -82,7 +82,7 @@ func sign(keyPair_t string, keyRing_t string, message string) *C.char {
 }
 
 //export verify
-func verify(keyRing_t string, message string, signature string) bool {
+func verify(keyRing_t string, m string, v string, signature string) bool {
 	keyRing := make(map[string]string)
 	split := strings.Split(keyRing_t, " ")
 	for i := 0; i < len(split); i++ {
@@ -100,14 +100,14 @@ func verify(keyRing_t string, message string, signature string) bool {
 		fmt.Printf("[ERROR GoLang] Could not decode Base58 signature: %v\n", err)
 		return false
 	}
-	return Verify(kr, []byte(message), decodedSig)
+	return Verify(kr, []byte(m), []byte(v), decodedSig)
 }
 
 func main() {
 	s := sign(
 		"1NBN9d4pZutCykB3Why5f3V7hG27EbcqKb 4fb0b355ad56c1d19ebb30591a036dfb6a2c20d9836b22c23dc521ea53e08cd4 02dcdb96d05d6cd36ce7014a69ebce8b48f8d7de46ce3bfa99482af65284697e13",
 		"024627032575180c2773b3eedd3a163dc2f3c6c84f9d0a1fc561a9578a15e6d0e3 02b266b2c32ba5fc8d203c8f3e65e50480dfc10404ed089bad5f9ac5a45ffa4251 031ea759e3401463b82e2132535393076dde89bf2af7fc550f0793126669ffb5cd",
-		"ROHIT",
+		"pollID", "myVoteIs10",
 	)
 	fmt.Printf("SINATURE: %v\n", s)
 }
