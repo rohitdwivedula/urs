@@ -8,6 +8,8 @@
 // full version: http://eprint.iacr.org/2012/577.pdf
 package main
 
+//Random CHange
+
 // References:
 //   [NSA]: Suite B implementer's guide to FIPS 186-3,
 //     http://www.nsa.gov/ia/_files/ecdsa.pdf
