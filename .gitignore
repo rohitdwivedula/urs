@@ -3,3 +3,4 @@ results/
 *.out
 *.so
 cpp/urs.h
+.idea
