@@ -20,7 +20,8 @@ var (
 	DefaultCurve = elliptic.P256()
 	keyring      *PublicKeyRing
 	testkey      *ecdsa.PrivateKey
-	testmsg      []byte
+	testm      []byte
+	testv      []byte
 	testsig      *RingSign
 )
 
@@ -66,9 +67,10 @@ func TestPopulateKeyRing(t *testing.T) {
 }
 
 func TestSign(t *testing.T) {
-	testmsg = []byte("Hello, world.")
+	testm = []byte("Hello, world.")
+	testv = []byte("Bye, world.")
 	var err error
-	testsig, err = Sign(crand.Reader, testkey, keyring, testmsg)
+	testsig, err = Sign(crand.Reader, testkey, keyring, testm, testv)
 	if err != nil {
 		fmt.Println(err.Error())
 		t.FailNow()
@@ -77,7 +79,7 @@ func TestSign(t *testing.T) {
 }
 
 func TestVerify(t *testing.T) {
-	if !Verify(keyring, testmsg, testsig) {
+	if !Verify(keyring, testm, testv, testsig) {
 		fmt.Println("urs: signature verification failed")
 		t.FailNow()
 	}
@@ -87,7 +89,7 @@ func BenchmarkSign(b *testing.B) {
 	runtime.GOMAXPROCS(8)
 	var err error
 	for i := 0; i < b.N; i++ {
-		testsig, err = Sign(crand.Reader, testkey, keyring, testmsg)
+		testsig, err = Sign(crand.Reader, testkey, keyring, testm, testv)
 		if err != nil {
 			fmt.Println(err.Error())
 			b.FailNow()
@@ -98,7 +100,7 @@ func BenchmarkSign(b *testing.B) {
 func BenchmarkVerify(b *testing.B) {
 	runtime.GOMAXPROCS(8)
 	for i := 0; i < b.N; i++ {
-		if !Verify(keyring, testmsg, testsig) {
+		if !Verify(keyring, testm, testv, testsig) {
 			fmt.Println("urs: signature verification failed")
 			b.FailNow()
 		}

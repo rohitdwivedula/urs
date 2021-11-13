@@ -94,7 +94,7 @@ func verify(keyRing_t string, m string, v string, signature string) bool {
 		fmt.Printf("[ERROR GoLang] Could not parse keyring: %v\n", err)
 		return false
 	}
-	decodedSig := &RingSign{nil, nil, nil, nil}
+	decodedSig := &RingSign{nil, nil, nil, nil, nil, nil}
 	err = decodedSig.FromBase58(signature)
 	if err != nil {
 		fmt.Printf("[ERROR GoLang] Could not decode Base58 signature: %v\n", err)

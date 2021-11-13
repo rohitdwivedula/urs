@@ -219,7 +219,33 @@ func (k *RingSign) FromBase58(sig string) error {
 	return nil
 }
 
+// ToBase58 returns a ring signature as a Base58 string.
+func (k *RingSign) ToBase58() string {
+	var buffer bytes.Buffer
+	buffer.WriteString("1") // Version
+	buffer.WriteString(string(Big2Base58(k.X)))
+	buffer.WriteString("+")
+	buffer.WriteString(string(Big2Base58(k.Y)))
+	buffer.WriteString("+")
+	buffer.WriteString(string(Big2Base58(k.Xp)))
+	buffer.WriteString("+")
+	buffer.WriteString(string(Big2Base58(k.Yp)))
+	buffer.WriteString("+")
 
+	for _, c := range k.C {
+		buffer.WriteString(string(Big2Base58(c)))
+		buffer.WriteString("&")
+	}
+
+	buffer.WriteString("+")
+
+	for _, t := range k.T {
+		buffer.WriteString(string(Big2Base58(t)))
+		buffer.WriteString("&")
+	}
+
+	return buffer.String()
+}
 
 
 
