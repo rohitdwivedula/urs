@@ -6,7 +6,7 @@
 // Package urs implements Unique Ring Signatures, as defined in
 // short version: http://csiflabs.cs.ucdavis.edu/~hbzhang/romring.pdf
 // full version: http://eprint.iacr.org/2012/577.pdf
-package signatures
+package main
 
 // References:
 //   [NSA]: Suite B implementer's guide to FIPS 186-3,

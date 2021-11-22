@@ -1,4 +1,4 @@
-package signatures
+package main
 
 /*
 #include <stdlib.h>
