@@ -2,7 +2,7 @@
 // Use of this source code is governed by the MIT
 // license that can be found in the LICENSE file.
 
-package main
+package signatures
 
 import (
 	"crypto/ecdsa"
@@ -20,8 +20,8 @@ var (
 	DefaultCurve = elliptic.P256()
 	keyring      *PublicKeyRing
 	testkey      *ecdsa.PrivateKey
-	testm      []byte
-	testv      []byte
+	testm        []byte
+	testv        []byte
 	testsig      *RingSign
 )
 

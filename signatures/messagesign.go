@@ -1,4 +1,4 @@
-package main
+package signatures
 
 /*
 #include <stdlib.h>
@@ -20,8 +20,8 @@ import (
 )
 
 // generates and return an ECDSA keypair.
-//export generateKeyPair
-func generateKeyPair() map[string]string {
+//export GenerateKeyPair
+func GenerateKeyPair() map[string]string {
 	// Generate keypairs.
 	aKeypair, _ := ecdsa.GenerateKey(btcec.S256(), crand.Reader)
 	pubkeyBtcec := btcec.PublicKey{aKeypair.PublicKey.Curve, aKeypair.PublicKey.X, aKeypair.PublicKey.Y}
@@ -39,14 +39,14 @@ func generateKeyPair() map[string]string {
 	return keypairMap
 }
 
-//export freeString
-func freeString(x *C.char) {
+//export FreeString
+func FreeString(x *C.char) {
 	C.free(unsafe.Pointer(x))
 }
 
 // sign a message with your keyPair with a keyRing of public keys.
-//export sign
-func sign(keyPair_t string, keyRing_t string, m string, v string) *C.char {
+//export SignMV
+func SignMV(keyPair_t string, keyRing_t string, m string, v string) *C.char {
 	keyPair := make(map[string]string)
 	keyRing := make(map[string]string)
 
@@ -81,8 +81,8 @@ func sign(keyPair_t string, keyRing_t string, m string, v string) *C.char {
 	}
 }
 
-//export verify
-func verify(keyRing_t string, m string, v string, signature string) bool {
+//export VerifyMV
+func VerifyMV(keyRing_t string, m string, v string, signature string) bool {
 	keyRing := make(map[string]string)
 	split := strings.Split(keyRing_t, " ")
 	for i := 0; i < len(split); i++ {

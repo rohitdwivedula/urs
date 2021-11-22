@@ -6,7 +6,7 @@
 // Package urs implements Unique Ring Signatures, as defined in
 // short version: http://csiflabs.cs.ucdavis.edu/~hbzhang/romring.pdf
 // full version: http://eprint.iacr.org/2012/577.pdf
-package main
+package signatures
 
 // References:
 //   [NSA]: Suite B implementer's guide to FIPS 186-3,
@@ -130,11 +130,10 @@ func GenerateKey(c elliptic.Curve, rand io.Reader) (priv *ecdsa.PrivateKey, err 
 // and we mirror that too.
 
 type RingSign struct {
-	X, Y *big.Int
+	X, Y   *big.Int
 	Xp, Yp *big.Int
-	C, T []*big.Int
+	C, T   []*big.Int
 }
-
 
 // this is just for debugging; we probably don't want this for anything else
 func (k *RingSign) String() string {
@@ -247,9 +246,6 @@ func (k *RingSign) ToBase58() string {
 	return buffer.String()
 }
 
-
-
-
 func hashG(c elliptic.Curve, m []byte) (hx, hy *big.Int) {
 	h := sha256.New()
 	h.Write(m)
@@ -282,7 +278,6 @@ func hashAllq(mvR []byte, hsx, hsy, hspx, hspy *big.Int, ax, ay, bx, by, bpx, bp
 // hashAllq hashes all the provided inputs using sha256.
 // This corresponds to hashq() or H'() over Zq
 
-
 // Sign signs an arbitrary length message (which should NOT be the hash of a
 // larger message) using the private key, priv and the public key ring, R.
 // It returns the signature as a struct of type RingSign.
@@ -312,7 +307,7 @@ func Sign(rand io.Reader,
 	mR := append(m, R.Bytes()...)
 	mv := append(m, v...)
 	mvR := append(mv, R.Bytes()...)
-	hx, hy := hashG(curve, mR) // H(mR)
+	hx, hy := hashG(curve, mR)    // H(mR)
 	hpx, hpy := hashG(curve, mvR) // H(mvR)
 
 	var id int
@@ -334,8 +329,8 @@ func Sign(rand io.Reader,
 			if R.Ring[j] == pub {
 				id = j
 				rb := t[j].Bytes()
-				ax[id], ay[id] = curve.ScalarBaseMult(rb)     // g^r
-				bx[id], by[id] = curve.ScalarMult(hx, hy, rb) // H(mR)^r
+				ax[id], ay[id] = curve.ScalarBaseMult(rb)         // g^r
+				bx[id], by[id] = curve.ScalarMult(hx, hy, rb)     // H(mR)^r
 				bpx[id], bpy[id] = curve.ScalarMult(hpx, hpy, rb) // H(mvR)^r
 			} else {
 				ax1, ay1 := curve.ScalarBaseMult(t[j].Bytes())                       // g^tj
@@ -346,7 +341,7 @@ func Sign(rand io.Reader,
 				w.Mul(priv.D, c[j])
 				w.Add(w, t[j])
 				w.Mod(w, N)
-				bx[j], by[j] = curve.ScalarMult(hx, hy, w.Bytes()) // H(mR)^(xi*cj+tj)
+				bx[j], by[j] = curve.ScalarMult(hx, hy, w.Bytes())     // H(mR)^(xi*cj+tj)
 				bpx[j], bpy[j] = curve.ScalarMult(hpx, hpy, w.Bytes()) // H(mvR)^(xi*cj+tj)
 				// TODO may need to lock on sum object.
 				sum.Add(sum, c[j]) // Sum needed in Step 3 of the algorithm
@@ -355,7 +350,7 @@ func Sign(rand io.Reader,
 	}
 	wg.Wait()
 	// Step 3, part 1: cid = H(m,R,{a,b}) - sum(cj) mod N
-	hsx, hsy := curve.ScalarMult(hx, hy, priv.D.Bytes()) // Step 4: H(mR)^xi
+	hsx, hsy := curve.ScalarMult(hx, hy, priv.D.Bytes())     // Step 4: H(mR)^xi
 	hspx, hspy := curve.ScalarMult(hpx, hpy, priv.D.Bytes()) // Step 4: H(mvR)^xi
 
 	hashmvRabbp := hashAllq(mvR, hsx, hsy, hspx, hspy, ax, ay, bx, by, bpx, bpy)
@@ -368,7 +363,6 @@ func Sign(rand io.Reader,
 	cx.Mul(priv.D, c[id])
 	t[id].Sub(t[id], cx) // here t[id] = ri (initialized inside the for-loop above)
 	t[id].Mod(t[id], N)
-
 
 	return &RingSign{hsx, hsy, hspx, hspy, c, t}, nil
 }
@@ -410,7 +404,7 @@ func Verify(R *PublicKeyRing, m []byte, v []byte, rs *RingSign) bool {
 	mR := append(m, R.Bytes()...)
 	mv := append(m, v...)
 	mvR := append(mv, R.Bytes()...)
-	hx, hy := hashG(c, mR) // H(mR)
+	hx, hy := hashG(c, mR)    // H(mR)
 	hpx, hpy := hashG(c, mvR) // H(mvR)
 
 	sum := new(big.Int).SetInt64(0)
@@ -450,5 +444,3 @@ func Verify(R *PublicKeyRing, m []byte, v []byte, rs *RingSign) bool {
 	sum.Mod(sum, N)
 	return sum.Cmp(hashmvRabbp) == 0
 }
-
-
