@@ -74,7 +74,6 @@ func SignMV(keyPair_t string, keyRing_t string, m string, v string) *C.char {
 		return C.CString("")
 	}
 	if Verify(kr, []byte(m), []byte(v), ringsig) {
-		fmt.Printf("%v", ringsig.ToBase58())
 		return C.CString(ringsig.ToBase58())
 	} else {
 		return C.CString("")
