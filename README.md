@@ -34,7 +34,7 @@ For more information on signature blinding, refer to
 
 ## Commands
 For building a C shared library use `go build -buildmode=c-shared -o urs.so`.
-For creating the `AAR` for Android use a command that looks something like: `ANDROID_HOME=/home/ardula/Android/Sdk/ ANDROID_NDK_HOME=/home/ardula/Android/Sdk/android-ndk-r23b gomobile bind -target android -v` (make sure to go into the `signatures` directory before running this.)
+For creating the `AAR` for Android use a command that looks something like: `ANDROID_HOME=/home/ardula/Android/Sdk/ ANDROID_NDK_HOME=/home/ardula/Android/Sdk/android-ndk gomobile bind -target android -v` (make sure to go into the `signatures` directory before running this.)
 
 ## Requirements
 [Go](http://golang.org) 1.2 or newer.

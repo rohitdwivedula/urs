@@ -90,3 +90,8 @@ func VerifyMV(keyRing_t string, m string, v string, signature string) bool {
 	}
 	return Verify(kr, []byte(m), []byte(v), decodedSig)
 }
+
+//export Hello
+func Hello() string {
+	return "Golang says hello!"
+}
