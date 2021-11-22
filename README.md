@@ -11,8 +11,6 @@ is flexible. Increasing this number slows down signing and
 verifying linearly, and also increases the size of the 
 signatures linearly.
 
-Deleted.
-
 When in default (unique) mode, signatures are generated 
 with the prefix '1' and contain immutable Hx, Hy values 
 as the first two bigints in the signature. These are 
@@ -34,65 +32,13 @@ the keyring are later revealed.
 For more information on signature blinding, refer to 
 [this link](https://download.wpsoftware.net/bitcoin/wizardry/ringsig-blinding.txt).
 
+## Commands
+For building a C shared library use `go build -buildmode=c-shared -o urs.so`.
 
 ## Requirements
 [Go](http://golang.org) 1.2 or newer.
 
-## Installation
-With Go installed, run the following command:
-  ```$ go get github.com/monero-project/urs/...```
-
-## Usage
-  -B=false: Enable signature blinding (non-unique!); B|blind
-  
-  -S="": Load a Base58 signature to verify; S|sig (filename)
-  
-  -b="": Verify a binary message; b|verify-bin (filename)
-
-  -blind=false: Enable signature blinding (non-unique!); B|blind
-  
-  -g="": Generates to a new keypair; g|set-generate (filename)
-  
-  -k="": Load a keyring of pubkeys; k|keyring (filename)
-  
-  -keypair="": Load a keypair to sign from; p|keypair (filename)
-  
-  -keyring="": Load a keyring of pubkeys; k|keyring (filename)
-  
-  -p="": Load a keypair to sign from; p|keypair (filename)
-  
-  -s="": Sign a text message; s|verify-bin (filename)
-  
-  -set-generate="": Generates to a new keypair; g|set-generate (filename)
-  
-  -sig="": Load a Base58 signature to verify; S|sig (filename)
-  
-  -sign-bin="": Sign a text message; z|verify-bin (filename)
-  
-  -sign-text="": Sign a binary message; s|verify-bin (filename)
-  
-  -v="": Verify a text message; v|verify-text (filename)
-  
-  -verify-bin="": Verify a binary message; b|verify-bin (filename)
-  
-  -verify-text="": Verify a text message; v|verify-text (filename)
-  
-  -z="": Sign a binary message; z|verify-bin (filename)
-
-## Example usage
-
-Generate signature example
-
-```$ urs -sign-bin urs -keypair pair.key -keyring pubkeyring.keys > signature```
-
-Verify signature example
-
-```$ urs -verify-bin urs -sig signature -keyring pubkeyring.keys```
-
 ## Acknowledgements
-
 - Andytoshi and Gmaxwell for their signature blinding scheme.
-
 - Conformal Systems for generating the btcec lib, so that secp256k1 could be used.
-
 - Hein Meling for the initial library for the ring signatures.
