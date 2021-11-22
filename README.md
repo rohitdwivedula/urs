@@ -40,6 +40,7 @@ For creating the `AAR` for Android use a command that looks something like: `AND
 [Go](http://golang.org) 1.2 or newer.
 
 ## Acknowledgements
+- This is a fork of [Monero Project - URS](https://github.com/monero-project/urs/)
 - Andytoshi and Gmaxwell for their signature blinding scheme.
 - Conformal Systems for generating the btcec lib, so that secp256k1 could be used.
 - Hein Meling for the initial library for the ring signatures.
