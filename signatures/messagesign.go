@@ -1,10 +1,5 @@
 package signatures
 
-/*
-#include <stdlib.h>
-*/
-import "C"
-
 import (
 	"crypto/ecdsa"
 	crand "crypto/rand"
@@ -12,7 +7,6 @@ import (
 	"fmt"
 	"strconv"
 	"strings"
-	"unsafe"
 
 	"github.com/btcsuite/btcd/btcec"
 	"github.com/btcsuite/btcd/chaincfg"
@@ -39,14 +33,9 @@ func GenerateKeyPair() map[string]string {
 	return keypairMap
 }
 
-//export FreeString
-func FreeString(x *C.char) {
-	C.free(unsafe.Pointer(x))
-}
-
 // sign a message with your keyPair with a keyRing of public keys.
 //export SignMV
-func SignMV(keyPair_t string, keyRing_t string, m string, v string) *C.char {
+func SignMV(keyPair_t string, keyRing_t string, m string, v string) string {
 	keyPair := make(map[string]string)
 	keyRing := make(map[string]string)
 
@@ -63,20 +52,20 @@ func SignMV(keyPair_t string, keyRing_t string, m string, v string) *C.char {
 
 	kp, err := ParseKeyPair(keyPair)
 	if err != nil {
-		return C.CString("")
+		return ""
 	}
 	kr, err := ParseKeyRing(keyRing, kp)
 	if err != nil {
-		return C.CString("")
+		return ""
 	}
 	ringsig, err := Sign(crand.Reader, kp, kr, []byte(m), []byte(v))
 	if err != nil {
-		return C.CString("")
+		return ""
 	}
 	if Verify(kr, []byte(m), []byte(v), ringsig) {
-		return C.CString(ringsig.ToBase58())
+		return ringsig.ToBase58()
 	} else {
-		return C.CString("")
+		return ""
 	}
 }
 
