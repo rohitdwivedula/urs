@@ -27,7 +27,12 @@ int main(){
 	char* ans = SignMV(
 		kp_g, kr_g, m_g, v_g
 	);
-	printf("%s\n", ans);
+	std::string s(ans);
 	FreeString(ans);
-	return 0;
+	std::cout << s << std::endl;
+
+	GoString s_g = convert(s);
+	int a = VerifyMV(kr_g, m_g, v_g, s_g);
+	bool b = (a != 0);
+	std::cout << "Veridication Status: " << a << std::endl;
 }

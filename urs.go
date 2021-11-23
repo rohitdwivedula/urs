@@ -171,7 +171,7 @@ func (k *RingSign) FromBase58(sig string) error {
 
 	if len(stringArray) != 6 {
 		err := errors.New("Failure to parse string signature for Base58 encoded" +
-			" ring signature! The signature did not contain 4 elements split by " +
+			" ring signature! The signature did not contain 6 elements split by " +
 			"+'s.")
 		return err
 	}

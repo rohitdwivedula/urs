@@ -81,23 +81,27 @@ func SignMV(keyPair_t string, keyRing_t string, m string, v string) *C.char {
 }
 
 //export VerifyMV
-func VerifyMV(keyRing_t string, m string, v string, signature string) bool {
+func VerifyMV(keyRing_t string, m string, v string, signature string) int32 {
 	keyRing := make(map[string]string)
 	split := strings.Split(keyRing_t, " ")
 	for i := 0; i < len(split); i++ {
 		keyRing[strconv.Itoa(i)] = split[i]
 	}
-
 	kr, err := ParseKeyRing(keyRing, nil)
 	if err != nil {
 		fmt.Printf("[ERROR GoLang] Could not parse keyring: %v\n", err)
-		return false
+		return 0
 	}
 	decodedSig := &RingSign{nil, nil, nil, nil, nil, nil}
 	err = decodedSig.FromBase58(signature)
 	if err != nil {
 		fmt.Printf("[ERROR GoLang] Could not decode Base58 signature: %v\n", err)
-		return false
+		return 0
 	}
-	return Verify(kr, []byte(m), []byte(v), decodedSig)
+	ver := Verify(kr, []byte(m), []byte(v), decodedSig)
+	if ver {
+		return 1
+	} else {
+		return 0
+	}
 }
